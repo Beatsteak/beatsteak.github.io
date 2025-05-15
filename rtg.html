@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RTG Detailseite</title>
+
+  <!-- dein globales CSS -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Mini-Overrides NUR für diese Seite -->
+  <style>
+    /* ─────────────── 1. Vollbild-Texte ─────────────── */
+    .rtg-text{
+      position:fixed; inset:0;
+      width:100vw; height:100vh;
+      object-fit:contain;
+      opacity:0; pointer-events:none;
+      transition:.3s ease;
+      z-index:75;
+    }
+    /* Sichtbarkeit via Wrapper-Hover */
+    .rtg-wrapper-1:hover ~ .rtg-text-1,
+    .rtg-wrapper-2:hover ~ .rtg-text-2,
+    .rtg-wrapper-3:hover ~ .rtg-text-3{ opacity:1; }
+
+    /* ─────────────── 2. Statisches Icon #4 ─────────────── */
+    .rtg-static{
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      height:100vh; width:auto;
+      pointer-events:none; z-index:45;
+    }
+
+    /* ─────────────── 3. Bounce + Wobble (rtg1-3) ─────────────── */
+    @keyframes icon-bounce{
+      0%,100%{transform:translate(-50%,-50%)}
+      50%    {transform:translate(-50%,calc(-50% - 3vh))}
+    }
+    .animate-bounce{animation:icon-bounce .55s ease-in-out}
+
+    @keyframes icon-wobble{
+      0%,100%{transform:translate(-50%,-50%) rotate(0deg)}
+      25%    {transform:translate(-50%,-50%) rotate(-4deg)}
+      75%    {transform:translate(-50%,-50%) rotate( 4deg)}
+    }
+    .animate-wobble{animation:icon-wobble .55s ease-in-out}
+  </style>
+</head>
+<body>
+
+  <div class="main-container">
+    <!-- Hintergrund -->
+    <img src="assets/rtg.jpg" alt="RTG Hintergrund" class="main-image">
+
+    <!-- ────────────────── Hover-Kreise + Icons + Texte ────────────────── -->
+
+    <!-- #1 -->
+    <div class="rtg-wrapper rtg-wrapper-1"></div>
+    <img src="assets/rtg1.png"   alt="Icon 1"  class="rtg-overlay rtg-img-1">
+    <img src="assets/rtgtx1.png" alt="Text 1"  class="rtg-text   rtg-text-1">
+
+    <!-- #2 -->
+    <div class="rtg-wrapper rtg-wrapper-2"></div>
+    <img src="assets/rtg2.png"   alt="Icon 2"  class="rtg-overlay rtg-img-2">
+    <img src="assets/rtgtx2.png" alt="Text 2"  class="rtg-text   rtg-text-2">
+
+    <!-- #3 -->
+    <div class="rtg-wrapper rtg-wrapper-3"></div>
+    <img src="assets/rtg3.png"   alt="Icon 3"  class="rtg-overlay rtg-img-3">
+    <img src="assets/rtgtx3.png" alt="Text 3"  class="rtg-text   rtg-text-3">
+
+    <!-- #4 (kein Hover, kein Wobble) -->
+    <img src="assets/rtg4.png"   alt="Icon 4"  class="rtg-static">
+  </div>
+
+  <!-- Gemeinsames JS für das Zufalls-Wackeln -->
+  <script src="script.js"></script>
+</body>
+</html>

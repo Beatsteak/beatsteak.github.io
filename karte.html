@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karte</title>
+
+  <!-- Dein zentrales Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Override nur für kbeschr.png: zentrieren, sichtbar machen & Transition -->
+  <style>
+  .kbes-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 1;              /* vorher war’s 0 */
+    animation: none;         /* WaveIn ausschalten */
+    transition: transform 0.1s ease-out;
+    pointer-events: none;
+    z-index: 90;
+
+    /* —— neu —— */
+    max-width: 100vw;
+    max-height: 100vh;
+    width: auto;
+    height: auto;
+  }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <!-- Hintergrund -->
+    <img src="assets/karte.jpg" alt="Karte Hintergrund" class="main-image" />
+
+    <!-- Icons -->
+    <div class="png-wrapper wrapper-12" id="wrapper12"></div>
+    <img src="assets/1.png" alt="Icon 1" class="png-overlay hidden" />
+
+    <div class="png-wrapper wrapper-6" id="wrapper6"></div>
+    <img src="assets/2.png" alt="Icon 2" class="png-overlay hidden" />
+
+    <div class="png-wrapper wrapper-9" id="wrapper9"></div>
+    <img src="assets/3.png" alt="Icon 3" class="png-overlay hidden" />
+
+    <div class="png-wrapper wrapper-3" id="wrapper3"></div>
+    <img src="assets/4.png" alt="Icon 4" class="png-overlay hidden" />
+
+    <!-- Kartenbeschreibung mit Parallax -->
+    <img
+      src="assets/kbeschr.png"
+      alt="Kartenbeschreibung"
+      class="kbes-overlay"
+    />
+  </div>
+
+  <!-- Gemeinsames JS -->
+  <script src="script.js"></script>
+
+  <!-- Parallax-Effekt nur für kbeschr.png -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const kbes = document.querySelector('.kbes-overlay');
+      if (!kbes) return;
+      const strength = 15;  // wie stark soll’s wackeln?
+      document.addEventListener('mousemove', e => {
+        const x = (e.clientX / window.innerWidth  - 0.5) * strength;
+        const y = (e.clientY / window.innerHeight - 0.5) * strength;
+        // transform überschreibt jetzt sauber das CSS-Basis-Transform
+        kbes.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

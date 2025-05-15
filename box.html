@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Box Detailseite</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* Fullscreen-Hintergrund */
+    .main-image {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      object-fit: cover;
+      z-index: 10;
+    }
+
+    /* Rolle initial unsichtbar, full-screen */
+    .overlay-rolle {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 100vw; height: 100vh;
+      object-fit: cover;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 100;
+      animation: none;
+    }
+
+    /* Einflug-Animation */
+    @keyframes rollInUp {
+      from {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% + 30vh)) scale(1);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+    .roll-in-up {
+      animation: rollInUp 0.9s ease-out 0.25s forwards;
+    }
+
+    /* Nach Einflug: Hover-Transition */
+    .rolle-ready {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      transition: transform 0.3s ease;
+    }
+    .roll-scale {
+      transform: translate(-50%, -50%) scale(1.15);
+    }
+
+    /* Exit-Animation + Fade-Out */
+    @keyframes rolleExit {
+      from {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      to {
+        transform: translate(-50%, -50%) scale(10) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    .exit-rolle {
+      animation: rolleExit 1s ease-in forwards;
+      z-index: 400;
+    }
+
+    /* Hover-/Klickzone für Rolle (30 vw × 40 vh) */
+    .hover-box {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 30vw; height: 40vh;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      cursor: pointer;
+      z-index: 200;
+    }
+
+    /* Fade-Overlay */
+    #fadeOverlay {
+      position: absolute; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: black;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 500;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    #fadeOverlay.fade {
+      animation: fadeIn 1s ease-in forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <!-- Fullscreen-Hintergrund -->
+    <img src="assets/boxauf.jpg" alt="Box Hintergrund" class="main-image">
+
+    <!-- Rolle -->
+    <img id="rolleImg" src="assets/rolle.png" alt="Rolle" class="overlay-rolle">
+
+    <!-- Hover-/Klickzone für Rolle -->
+    <div id="hoverBox" class="hover-box"></div>
+
+    <!-- Schwarz-Fade-Overlay -->
+    <div id="fadeOverlay"></div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const rolle    = document.getElementById('rolleImg');
+      const hoverBox = document.getElementById('hoverBox');
+      const fadeOv   = document.getElementById('fadeOverlay');
+
+      // Rolle Einflug
+      rolle.classList.add('roll-in-up');
+      rolle.addEventListener('animationend', function onIn(e) {
+        if (e.animationName === 'rollInUp') {
+          rolle.classList.remove('roll-in-up');
+          rolle.classList.add('rolle-ready');
+          rolle.removeEventListener('animationend', onIn);
+        }
+      });
+
+      // Hover-Zoom Rolle
+      hoverBox.addEventListener('mouseenter', () => rolle.classList.add('roll-scale'));
+      hoverBox.addEventListener('mouseleave', () => rolle.classList.remove('roll-scale'));
+
+      // Klick Rolle → Exit-Animation + Fade → karte.html
+      hoverBox.addEventListener('click', () => {
+        if (!document.body.classList.contains('edit-mode')) {
+          rolle.classList.add('exit-rolle');
+          fadeOv.classList.add('fade');
+          rolle.addEventListener('animationend', function onExit(e) {
+            if (e.animationName === 'rolleExit') {
+              window.location.href = 'karte.html';
+            }
+          }, { once: true });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

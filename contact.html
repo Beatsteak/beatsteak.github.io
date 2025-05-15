@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kontakt</title>
+
+  <!-- Zentrales Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="main-container">
+    <!-- Vollflächiger Hintergrund (falls du den brauchst) -->
+    <img src="assets/contact.jpg" alt="Kontakt Hintergrund" class="main-image">
+
+    <!-- ─────────────────── Hover-Zonen (grün im Edit-Mode) ─────────────────── -->
+    <div class="contact-wrapper mail-hover"></div>
+    <div class="contact-wrapper btn-hover" id="btnWrapper"></div>
+
+    <!-- ───────────────────────────── Mail-Teil ─────────────────────────────── -->
+    <img src="assets/mail.png"     alt="Mail-Icon"      class="mail-overlay mail-roll">
+    <img src="assets/contnote.png" alt="Kontakt-Notiz"  class="contact-note">
+
+    <!-- ─────────────────────────── Button-Gedöns ───────────────────────────── -->
+    <img src="assets/buttonbg.png" alt="Button BG"      class="btn-bg">
+    <img src="assets/button.png"   alt="Button"         class="btn-img">
+    <img src="assets/sign.png"     alt="Signatur"       class="btn-sign">
+  </div>
+
+  <!-- Gemeinsames Skript (für Bounce, Edit-Mode usw.) -->
+  <script src="script.js"></script>
+
+  <!-- Mini-Snippet: Mailto bei Button-Click (nur im Normal-Mode) -->
+  <script>
+    document.getElementById('btnWrapper')?.addEventListener('click', () => {
+      if (!document.body.classList.contains('edit-mode')) {
+        location.href = 'mailto:m.miering.mm@gmail.com';
+      }
+    });
+  </script>
+</body>
+</html>

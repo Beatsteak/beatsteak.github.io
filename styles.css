@@ -1,0 +1,473 @@
+/* =========================================================
+   Grundlayout
+   ========================================================= */
+html,body{margin:0;padding:0;height:100%}
+.main-container{position:relative;width:100vw;height:100vh;overflow:hidden}
+.main-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* =========================================================
+   1) STARTSEITE  (box.png + brief.png + open.png)
+   ========================================================= */
+.overlay-box,
+.overlay-open,
+.overlay-brief{
+  position:absolute;top:50%;left:50%;
+  height:100vh;width:auto;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  transition:.3s;
+}
+.overlay-box   {z-index:25}
+.overlay-open  {z-index:26;object-fit:contain;opacity:0}
+.overlay-brief {z-index:30}
+
+.box-wrapper,
+.brief-wrapper,
+.open-wrapper{
+  position:absolute;cursor:pointer;z-index:20
+}
+
+/* Box-Fläche: zentriert, 55 vw Kreis */
+.box-wrapper{
+  top:50%;left:55%;
+  width:60vw;height:60vh;
+  transform:translate(-50%,-50%);
+}
+
+/* Brief-Fläche */
+.brief-wrapper{
+  top:40%;left:60%;
+  width:25vw;height:25vh;
+  transform:translate(-50%,-50%);
+}
+
+/* Open-Fläche – wird per CSS positioniert (kein Inline-Style!) */
+.open-wrapper{
+  top:18%;
+  left:32%;
+  width:11vw;height:11vw;
+  background:rgba(0,255,0,.25);   /* Debug-Grün – wegknipsen, wenn fertig */
+  border:2px dashed lime;
+  transform:translate(-50%,-50%);
+  z-index:60;
+}
+
+/* Basis-Hover-Effekte */
+.box-wrapper:hover   ~ .overlay-box,
+.brief-wrapper:hover ~ .overlay-brief{
+  transform:translate(-50%,-50%) scale(1.05);
+}
+.brief-wrapper:hover ~ .overlay-brief{transform:translate(-50%,-50%) scale(1.15)}
+
+/* =========================================================
+   2) ROLLE (Link zur Karte) – jetzt mit Einflugshow
+   ========================================================= */
+.overlay-rolle{
+  position:absolute;top:50%;left:50%;
+  /* Finale Zielposition (für Hover-Effekt & 100 % Keyframe) */
+  transform:translate(-50%,-50%);
+
+  height:100vh;width:auto;pointer-events:none;z-index:25;
+
+  /* Neu: Start unsichtbar & animiert einfliegen */
+  opacity:0;
+  animation:rolleIn .9s ease-out .25s forwards;
+}
+
+/* Flug von unten + Fade-In */
+@keyframes rolleIn{
+  0%   { transform:translate(-50%,150%); opacity:0; }   /* weit unterhalb */
+  70%  { opacity:.9; }                                   /* langsam sichtbar */
+  100% { transform:translate(-50%,-50%); opacity:1; }    /* Ziel erreicht */
+}
+
+
+/* =========================================================
+   3) MODAL (Anschreiben)
+   ========================================================= */
+.modal{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);
+  z-index:20000;
+}
+.modal-content{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  max-width:90vw;max-height:90vh;width:auto;height:auto;object-fit:contain;
+}
+.modal-close{
+  position:absolute;top:10px;right:25px;font-size:48px;color:#fff;cursor:pointer;
+}
+
+/* =========================================================
+   4) KARTE-SEITE  (Hover-Wrapper + PNGs)
+   ========================================================= */
+.png-wrapper{
+  position:absolute;background:rgba(0,255,0,.25);
+  border:2px dashed lime;cursor:pointer;pointer-events:auto;z-index:9999;
+}
+.png-overlay{
+  position:absolute;top:50%;left:50%;height:100vh;width:auto;
+  transform:translate(-50%,-50%);pointer-events:none;transition:.3s;z-index:45;
+}
+.png-wrapper:hover+.png-overlay{
+  transform:translate(-50%,-50%) scale(1.05);
+}
+
+/* Koordinaten für die vier Karte-Wrapper */
+.wrapper-12{top:15.2%;left:43.9%;width:19.1vw;height:27.9vh}
+.wrapper-6 {top:48.0%;left:42.2%;width:24.3vw;height:26.3vh}
+.wrapper-9 {top:20.8%;left:18.6%;width:22.9vw;height:32.0vh}
+.wrapper-3 {top:18.4%;left:64.5%;width:21.3vw;height:48.7vh}
+
+/* =========================================================
+   5) SCHULE-SEITE  (Parallax-Bilder + Texte)
+   ========================================================= */
+
+/* Unsichtbare Hover-Flächen – im Edit-Mode grün umrissen */
+.schul-hover{
+  position:absolute;
+  background:rgba(0,255,0,.25);      /* Debug-Grün – in Produktion killen */
+  border:2px dashed lime;
+  cursor:pointer;
+  pointer-events:auto;
+  z-index:9999;
+}
+
+/* Parallax-Overlay-Bilder */
+.schul-overlay{
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(calc(-50% + var(--tx,0px)),
+                      calc(-50% + var(--ty,0px)));
+  height:100vh; width:auto;
+  pointer-events:none;
+  transition:.3s;
+  z-index:60;
+}
+
+/* Bild leicht vergrößern, wenn entsprechende Hover-Fläche aktiv */
+.schul-hover-1:hover ~ .schul-img-1,
+.schul-hover-2:hover ~ .schul-img-2,
+.schul-hover-3:hover ~ .schul-img-3,
+.schul-hover-4:hover ~ .schul-img-4,
+.schul-hover-5:hover ~ .schul-img-5{
+  transform:translate(calc(-50% + var(--tx,0px)),
+                      calc(-50% + var(--ty,0px))) scale(1.05);
+}
+
+/* Text-Overlays standardmäßig unsichtbar */
+.schul-text{
+  position:absolute;
+  inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  z-index:75;
+}
+
+/* …werden erst beim Hover eingeblendet */
+.schul-hover-1:hover ~ .schul-text-1,
+.schul-hover-2:hover ~ .schul-text-2,
+.schul-hover-3:hover ~ .schul-text-3,
+.schul-hover-4:hover ~ .schul-text-4,
+.schul-hover-5:hover ~ .schul-text-5{
+  opacity:1;
+}
+
+/* Koordinaten & Größen der fünf Hover-Flächen */
+.schul-hover-1{top:19.7%; left:21.8%; width:21.1vw; height:74.9vh}
+.schul-hover-2{top:31.3%; left:63.9%; width:14.6vw; height:53.0vh}
+.schul-hover-3{top:73.8%; left:42.1%; width:21.8vw; height:26.1vh}
+.schul-hover-4{top:0.6%;  left:49.9%; width:26.4vw; height:34.1vh}
+.schul-hover-5{top:0.2%;  left:36.0%; width:14.8vw; height:27.0vh}
+
+/* =========================================================
+   6) RTG-SEITE  (Kreis-Icons + Vollbild-Texte)
+   ========================================================= */
+.rtg-wrapper{
+  position:absolute;width:30vw;height:30vw;border-radius:50%;
+  background:rgba(0,255,0,.25);border:2px dashed lime;
+  pointer-events:auto;z-index:9999;transform:translate(-50%,-50%);
+}
+.rtg-wrapper-1{top:80%;left:70%}
+.rtg-wrapper-2{top:20%;left:30%}
+.rtg-wrapper-3{top:20%;left:70%}
+.rtg-overlay{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  height:100vh;width:auto;pointer-events:none;transition:.3s;z-index:45;
+}
+.rtg-wrapper-1:hover + .rtg-overlay,
+.rtg-wrapper-2:hover + .rtg-overlay,
+.rtg-wrapper-3:hover + .rtg-overlay{
+  transform:translate(-50%,-50%) scale(1.05);
+}
+
+/* =========================================================
+   7) SKILL-SEITE
+   ========================================================= */
+.skill-wrapper{
+  position:absolute;top:0;height:100%;width:50vw;
+  background:rgba(0,255,0,.25);border:2px dashed lime;cursor:pointer;z-index:20;
+}
+.skill-left {left:0}
+.skill-right{right:0}
+.skill-overlay{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  height:100vh;width:auto;pointer-events:none;transition:.3s;z-index:45;
+}
+.skill-bg,.skill-text{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;opacity:0;pointer-events:none;transition:.3s;
+}
+.skill-bg{z-index:65}
+.skill-text{z-index:75;transition-delay:.15s}
+.skill-left:hover  ~ .skill-img-1,
+.skill-right:hover ~ .skill-img-2{
+  transform:translate(-50%,-50%) scale(1.05);
+}
+.skill-left:hover  ~ .skill-bg-1,
+.skill-left:hover  ~ .skill-text-1,
+.skill-right:hover ~ .skill-bg-2,
+.skill-right:hover ~ .skill-text-2{opacity:1}
+
+/* =========================================================
+   8) CONTACT-SEITE
+   ========================================================= */
+.contact-wrapper {
+  position: absolute;
+  width: 15vw;
+  height: 15vw;
+  background: rgba(0,255,0,0.25);
+  border: 2px dashed lime;
+  cursor: pointer;
+  z-index: 20;
+}
+.mail-hover {
+  top: 68%;
+  left: 58%;
+  transform: translate(-50%, -50%);
+}
+.btn-hover {
+  top: 68%;
+  left: 41%;
+  transform: translate(-50%, -50%);
+}
+.mail-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100vh;
+  width: auto;
+  pointer-events: none;
+  transition: .3s;
+  z-index: 40;
+}
+.contact-note {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  pointer-events: none;
+  transition: .5s;
+  z-index: 60;
+}
+.mail-hover:hover ~ .contact-note {
+  opacity: 1;
+}
+.btn-bg,
+.btn-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100vh;
+  width: auto;
+  pointer-events: none;
+
+  /* neu: sanft animieren, wenn transform sich ändert */
+  opacity: 1;
+  transition: transform .3s ease-out;
+}
+
+/* .btn-sign bleibt separat mit Animation */
+
+.btn-sign {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100vh;
+  width: auto;
+  pointer-events: none;
+  /* nur für bg und img bleibt opacity 1 / transition .3s */
+}
+.btn-bg  { z-index: 50; }
+.btn-img { z-index: 60; }
+.btn-sign {
+  z-index: 70;
+
+  /* neu: unsichtbar starten und sanft einblenden */
+  opacity: 0;
+  animation: fadeIn 2.0s ease-out 0.8s forwards;
+}
+.btn-hover:hover ~ .btn-bg {
+  transform: translate(-50%, -50%) scale(1.03);
+}
+.btn-hover:hover ~ .btn-img {
+  transform: translate(calc(-50% + 25px), calc(-50% - 25px)) scale(1.30);
+}
+
+
+/* =========================================================
+   9) KEYFRAMES & UTILITIES
+   ========================================================= */
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+.hidden{opacity:0;pointer-events:none}
+.fade-in{animation:fadeIn .6s ease-out forwards}
+
+@keyframes mail-bounce{
+  0%,100%{transform:translate(-50%,-50%)}
+  50%   {transform:translate(-50%,calc(-50% - 12px))}
+}
+.animate-roll{
+  animation:mail-bounce .25s ease-out;
+  animation-iteration-count:2;
+}
+.mail-hover:hover ~ .mail-overlay{
+  animation:none;
+  transform:translate(calc(-50% - 8px),
+                       calc(-50% - 10px))
+             scale(1.10);
+}
+
+/* =========================================================
+   Hover-Logik Box vs. Open  (LETZTER Block!) – überschreibt alles
+   ========================================================= */
+
+/* Box-Hover → beide Overlays 1.05 */
+.box-wrapper:hover ~ .overlay-box,
+.box-wrapper:hover ~ .overlay-open{
+  transform:translate(-50%,-50%) scale(1.05);
+  opacity:1;
+}
+
+/* Open-Hover → Box 1.05, Open 1.08 */
+.open-wrapper:hover ~ .overlay-box{
+  transform:translate(-50%,-50%) scale(1.05);
+}
+.open-wrapper:hover ~ .overlay-open{
+  transform:translate(-50%,-50%) scale(1.06);
+  opacity:1;
+}
+
+/* =========================================================
+   Karten-Beschriftung  (kbeschr.png)
+   ========================================================= */
+.kbes-overlay{
+  position:fixed;
+  top:100%; left:50%;
+  transform:translate(-50%,0) scale(0.8);
+  width:100vw;height:auto;
+  opacity:0;
+  pointer-events:none;
+  z-index:90;
+  animation:waveIn 2s cubic-bezier(.25,.8,.25,1) forwards;
+}
+
+@keyframes waveIn{
+  0%{
+    top:100%;
+    clip-path:polygon(0 100%,100% 100%,100% 100%,0 100%);
+    opacity:0;
+    transform:translate(-50%,0) scale(0.8);
+  }
+  50%{
+    top:50%;
+    clip-path:polygon(
+        0 85%,8% 78%,16% 88%,24% 75%,32% 90%,
+        40% 77%,48% 87%,56% 78%,64% 89%,72% 77%,
+        80% 91%,88% 79%,100% 85%,
+        100% 100%,0 100%);
+    opacity:1;
+    transform:translate(-50%,-50%) scale(0.9);
+  }
+  100%{
+    top:50%;
+    clip-path:polygon(0 0,100% 0,100% 100%,0 100%);
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1);
+  }
+}
+
+/* Back-Button für alle Seiten */
+.back-full {
+  position: fixed;
+  top: 0; left: 0;
+  width: auto; height: auto;
+  max-width: 100vw;
+  max-height: 100vh;
+  pointer-events: none;
+  transition: transform .3s ease;
+  z-index: 9999;
+}
+.back-scale {
+  transform: scale(1.01);
+}
+.back-box {
+  position: absolute;
+  top: 1vh; left: 1vw;
+  width: 130px;   /* oder was besser passt */
+  height: 90px;   /* … */
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+/* ─────────────  RTG-Texte  ───────────── */
+.rtg-text{
+  position:fixed;           /* klebt am Viewport, nicht am Kreis */
+  inset:0;
+  width:100vw; height:100vh;
+  object-fit:contain;       /* cover, wenn du rand­los willst */
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+  z-index:70;               /* über Icons (45) und unter Back-Button (9999) */
+}
+
+/* Hover-Logik für die drei Kreise */
+.rtg-wrapper-1:hover ~ .rtg-text-1,
+.rtg-wrapper-2:hover ~ .rtg-text-2,
+.rtg-wrapper-3:hover ~ .rtg-text-3{
+  opacity:1;
+}
+/* —————————————————————————————————————————
+   Debug-Hoverflächen unsichtbar machen
+   (pointer-events bleiben erhalten)
+   ————————————————————————————————————————— */
+.box-wrapper,
+.brief-wrapper,
+.open-wrapper,
+.png-wrapper,
+.schul-hover,
+.rtg-wrapper,
+.skill-wrapper,
+.contact-wrapper {
+  background: transparent !important;
+  border: none         !important;
+}
+/* Skill-Layer tauschen: linkes Icon über rechtes */
+.skill-img-1 { z-index: 46; }  /* eine Stufe über dem Default */
+.skill-img-2 { z-index: 44; }  /* eine Stufe darunter */
+
+/* 4.png ein bisschen höher hängen lassen */
+.wrapper-3 + .png-overlay {
+  top: 48%;       /* statt 50% – nach Belieben feintunen */
+  left: 49%;       /* statt 50% – je weiter nach links, desto kleiner der Wert */
+  /* oder alternativ: transform: translate(-50%, -60%); */
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maikes interaktive Bewerbung</title>
+
+  <!-- Zentrales Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* Debug-Grün für Hover-Flächen (lass es rauswerfen, wenn’s dich nervt) */
+    .box-wrapper,.brief-wrapper,.open-wrapper{
+      background:rgba(0,255,0,.25);border:2px dashed lime;
+    }
+
+    /* Hover-Zoom (Open-Selector fehlt hier, damit 1.08× aus styles.css gewinnt) */
+    .box-wrapper:hover  ~ .overlay-box,
+    .brief-wrapper:hover~ .overlay-brief{
+      transform:translate(-50%,-50%) scale(1.05);opacity:1;
+    }
+
+    /* X-Button weg! */
+    .modal-close{display:none!important;}
+
+    /* Vollbild-Back-Pfeil (PNG komplett transparent außer Pfeil oben links) */
+    .modal-back{
+      position:fixed;top:0;left:0;width:100vw;height:100vh;
+      object-fit:contain;cursor:pointer;z-index:20001;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-container">
+    <img src="assets/main.jpg" alt="Hintergrund" class="main-image">
+
+    <div class="box-wrapper"   id="boxWrapper"></div>
+    <div class="brief-wrapper" id="briefWrapper"></div>
+    <div class="open-wrapper"  id="openWrapper"></div>
+
+    <img src="assets/open.png"  class="overlay-open"  alt="Open">
+    <img src="assets/box.png"   class="overlay-box"   alt="Box">
+    <img src="assets/brief.png" class="overlay-brief" alt="Brief">
+  </div>
+
+  <!-- Modal mit Anschreiben + Back-Pfeil -->
+  <div id="modal" class="modal">
+    <img id="modalBack"  src="assets/back.png" class="modal-back"    alt="Zurück">
+    <img id="modalImage" class="modal-content" alt="Inhalt">
+    <span class="modal-close" id="modalClose">&times;</span>
+  </div>
+
+  <script src="script.js"></script>
+
+  <!-- Einzeiler: Back-Pfeil schließt das Modal -->
+  <script>
+    document.getElementById('modalBack')?.addEventListener('click', ()=>{
+      document.getElementById('modal').style.display='none';
+    });
+    /* Open-Wrapper bleibt wie gehabt → box.html */
+    document.getElementById('openWrapper')?.addEventListener('click',()=>{
+      if(!document.body.classList.contains('edit-mode'))location.href='box.html';
+    });
+  </script>
+</body>
+</html>
